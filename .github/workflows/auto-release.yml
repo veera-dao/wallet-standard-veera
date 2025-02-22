@@ -1,7 +1,6 @@
-# This workflow will bump the patch version of the package and create a release on GitHub.
-# It triggers the npm-publish workflow to publish the package to NPM.
+# This workflow will bump the patch version of the package, create a release on GitHub, and publish the package to NPM.
 
-name: Auto Release
+name: Auto Release and Publish
 
 on:
   push:
@@ -28,7 +27,7 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
 
       - name: Bump patch version
-        run: npm version patch
+        run: npm version patch --no-git-tag-version
 
       - name: Get version
         id: project-version
@@ -36,7 +35,9 @@ jobs:
         with:
           package-manager: 'npm'
 
-      - run: git push
+      - run: |
+          git commit -am "Bump version to v${{ steps.project-version.outputs.version }} [skip ci]"
+          git push
 
       - uses: "marvinpinto/action-automatic-releases@latest"
         with:
@@ -45,3 +46,27 @@ jobs:
           prerelease: false
           title: "v${{ steps.project-version.outputs.version }}"
 
+  publish:
+    runs-on: ubuntu-latest
+    needs: release  # Ensures this job runs after the release job
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Build Package
+        run: npm run build
+
+      - name: Publish to NPM
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
