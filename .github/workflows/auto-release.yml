@@ -15,7 +15,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.REPO_PUSH_TOKEN }}
 
       - name: 'Configure git'
         run: |
@@ -40,7 +40,7 @@ jobs:
 
       - uses: "marvinpinto/action-automatic-releases@latest"
         with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          repo_token: "${{ secrets.REPO_PUSH_TOKEN }}"
           automatic_release_tag: "v${{ steps.project-version.outputs.version }}"
           prerelease: false
           title: "v${{ steps.project-version.outputs.version }}"
