@@ -6,7 +6,6 @@ on:
   push:
     branches:
       - master
-      - chore/fix-auto-release-loop
   workflow_dispatch:
 
 jobs:
@@ -38,7 +37,7 @@ jobs:
 
       - run: |
           git commit -am "Bump version to v${{ steps.project-version.outputs.version }} [skip ci]"
-          git push origin chore/fix-auto-release-loop
+          git push
 
       - uses: "marvinpinto/action-automatic-releases@latest"
         with:
