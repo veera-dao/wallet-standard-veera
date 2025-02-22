@@ -50,5 +50,5 @@
     "overrides": {
         "serialize-javascript": "6.0.2"
     },
-    "version": "0.0.10"
+    "version": "0.0.11"
 }
