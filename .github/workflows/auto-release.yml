@@ -53,6 +53,11 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.REPO_PUSH_TOKEN }}
+
+      - name: Pull latest changes
+        run: git pull origin master
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
